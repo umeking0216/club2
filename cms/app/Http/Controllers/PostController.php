@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Like;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Validator;  //この1行だけ追加！
 
@@ -92,13 +94,24 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
+        $post = Post::find($request->id);
         $images = $request->file('images');
-        $path = null;  // 変数を宣言し、初期化
-    if ($request->hasFile('images')) {
-        $path = \Storage::put('/public', $images);
-        $path = explode('/', $path);
+        $path = $post->images;  // 変数を宣言し、初期化
+    //   $new_path = [ ];
+       
+        if (isset($images)) {
+            // 現在の画像ファイルの削除
+            \Storage::disk('public')->delete($path);
+            // 選択された画像ファイルを保存してパスをセット
+            $path = $images->store('posts', 'public');
+        }
+    //   dd($path);
+    // if ($images) {
+    //     $path = \Storage::put('/public', $images);
+    //     $new_path = explode('/', $path);
     
-     }
+    //  }
+        //  dd($path);
         //バリデーション
         //  $validator = Validator::make($request->all(), [
         //      'id' => 'required',
@@ -117,14 +130,14 @@ class PostController extends Controller
         //データ更新
         // $posts = Post::find($request->id);
         
-        $post = Post::find($request->id);
+        // $post = Post::find($request->id);
 if (!$post) {
     abort(404); // もし$postがnullなら、404エラーを返す
 }
-
+        // dd($path);
         $post->title = $request->title;
 	    $post->body = $request->body;
-	    $post->images = $path ? $path[1] : null;
+	    $post->images = $path;
         $post->save();
         return redirect('/');
         
@@ -141,4 +154,47 @@ if (!$post) {
        $post->delete();       //追加
        return redirect('/');  //追加
     }
+    
+    // only()の引数内のメソッドはログイン時のみ有効
+  public function __construct()
+  {
+    $this->middleware(['auth', 'verified'])->only(['like', 'unlike']);
+  }
+
+
+ /**
+  * 引数のIDに紐づくリプライにLIKEする
+  *
+  * @param $id リプライID
+  * @return \Illuminate\Http\RedirectResponse
+  */
+  public function like($id)
+  {
+    Like::create([
+      'post_id' => $id,
+      'user_id' => Auth::id(),
+    ]);
+
+    session()->flash('success', 'You Liked the Reply.');
+
+    return redirect()->back();
+  }
+
+  /**
+   * 引数のIDに紐づくリプライにUNLIKEする
+   *
+   * @param $id リプライID
+   * @return \Illuminate\Http\RedirectResponse
+   */
+  public function unlike($id)
+  {
+    $like = Like::where('post_id', $id)->where('user_id', Auth::id())->first();
+    $like->delete();
+
+    session()->flash('success', 'You Unliked the Reply.');
+
+    return redirect()->back();
+  }
+    
+    
 }

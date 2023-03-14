@@ -22,7 +22,7 @@
                   <div class="flex flex-col px-2 py-2">
                    <!-- カラム１ -->
                     <div class="w-full md:w-1/1 px-3 mb-2 md:mb-0">
-                      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" >
                        タイトル
                       </label>
                       <input name="title" class="appearance-none block w-full text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="">
@@ -58,8 +58,21 @@
             @foreach ($posts as $post)
             <x-collection id="{{ $post->id }}">
                 <h2>{{ $post->title }}</h2>
-                <img src="{{ '/storage/' . $post['images']}}" class='w-10 mb-3'/>
+                <div style="width:30%; height:auto;">
+                 <img src="{{ '/storage/' . $post['images']}}" style="width=100%"/>
+                </div>
                 <p>{{ $post->body }}</p>
+                
+                <div>
+                    @if($post->is_liked_by_auth_user())
+                        <a href="{{ route('post.unlike', ['id' => $post->id]) }}" class="btn btn-success btn-sm">いいね
+                        <span class="badge">{{ $post->likes->count() }}</span></a>
+                    @else
+                        <a href="{{ route('post.like', ['id' => $post->id]) }}" class="btn btn-secondary btn-sm">いいね
+                        <span class="badge">{{ $post->likes->count() }}</span></a>
+                    @endif
+                </div>
+                {{ $post->likes->count() }}
             </x-collection>
             
             @endforeach

@@ -37,4 +37,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// いいね処理
+Route::get('/post/like/{id}', [PostController::class, 'like'])->name('post.like');
+// Route::get('/post/like/{id}', 'PostController@like')->name('post.like');
+// いいね解除
+Route::get('/post/like/{id}', [PostController::class, 'unlike'])->name('post.unlike');
+// Route::get('/post/unlike/{id}', 'PostController@unlike')->name('post.unlike');
+
+
+// Route::post('/post/like', [PostController::class, 'like'])->name('post.like');
+
 require __DIR__.'/auth.php';
