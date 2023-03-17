@@ -63,15 +63,16 @@
                 </div>
                 <p>{{ $post->body }}</p>
                 
-                <div>
-                    @if($post->is_liked_by_auth_user())
-                        <a href="{{ route('post.unlike', ['id' => $post->id]) }}" class="btn btn-success btn-sm">いいね
-                        <span class="badge">{{ $post->likes->count() }}</span></a>
-                    @else
-                        <a href="{{ route('post.like', ['id' => $post->id]) }}" class="btn btn-secondary btn-sm">いいね
-                        <span class="badge">{{ $post->likes->count() }}</span></a>
-                    @endif
-                </div>
+        <a href="#" onclick="event.preventDefault(); document.getElementById('like-post-form-{{ $post->id }}').submit();">
+         いいね
+        </a>
+        <form id="like-post-form-{{ $post->id }}" action="{{ route('post.like', ['post' => $post->id]) }}" method="POST" style="display: none;">
+        @csrf
+        </form>
+
+                
+                
+                
                 {{ $post->likes->count() }}
             </x-collection>
             

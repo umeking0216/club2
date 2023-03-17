@@ -38,11 +38,20 @@ Route::middleware('auth')->group(function () {
 });
 
 // いいね処理
-Route::get('/post/like/{id}', [PostController::class, 'like'])->name('post.like');
+// Route::get('/post/like/{id}', [PostController::class, 'like'])->name('post.like');
 // Route::get('/post/like/{id}', 'PostController@like')->name('post.like');
 // いいね解除
-Route::get('/post/like/{id}', [PostController::class, 'unlike'])->name('post.unlike');
-// Route::get('/post/unlike/{id}', 'PostController@unlike')->name('post.unlike');
+// Route::get('/post/like/{id}', [PostController::class, 'unlike'])->name('post.unlike');
+// // Route::get('/post/unlike/{id}', 'PostController@unlike')->name('post.unlike');
+// Route::get('/post/like/{id}', 'PostsController@like')->name('post.like');
+// Route::get('/post/unlike/{id}', 'PostsController@unlike')->name('post.unlike');
+// Route::post('/post/like', [PostController::class, 'like'])->name('post.like');
+Route::post('/post/unlike', [PostController::class, 'unlike'])->name('post.unlike');
+
+// Route::post('/post/like/{post}', [PostController::class, 'like'])->name('post.like');
+Route::post('post/like/{post}', [PostController::class, 'like'])->name('post.like');
+
+
 
 
 // Route::post('/post/like', [PostController::class, 'like'])->name('post.like');
