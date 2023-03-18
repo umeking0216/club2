@@ -59,7 +59,8 @@
             <x-collection id="{{ $post->id }}">
                 <h2>{{ $post->title }}</h2>
                 <div style="width:30%; height:auto;">
-                 <img src="{{ '/storage/' . $post['images']}}" style="width=100%"/>
+       
+                 <img src="{{url('/storage')}}/{{$post['images']}}" style="width=100%"/>
                 </div>
                 <p>{{ $post->body }}</p>
                 
