@@ -168,17 +168,32 @@ if (!$post) {
   * @param $id リプライID
   * @return \Illuminate\Http\RedirectResponse
   */
-  public function like($id)
-  {
-    Like::create([
-      'post_id' => $id,
-      'user_id' => Auth::id(),
-    ]);
+//   public function like($id)
+//   {
+//     Like::create([
+//       'post_id' => $id,
+//       'user_id' => Auth::id(),
+//     ]);
 
-    session()->flash('success', 'You Liked the Reply.');
+//     session()->flash('success', 'You Liked the Reply.');
 
-    return redirect()->back();
-  }
+//     return redirect()->back();
+//   }
+  
+  public function like(Post $post)
+{
+    $user = auth()->user();
+
+    if ($user->likedPosts()->where('post_id', $post->id)->exists()) {
+        $user->likedPosts()->detach($post);
+    } else {
+        $user->likedPosts()->attach($post);
+    }
+
+    return back();
+}
+  
+  
 
   /**
    * 引数のIDに紐づくリプライにUNLIKEする

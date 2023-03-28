@@ -64,12 +64,20 @@
                 </div>
                 <p>{{ $post->body }}</p>
                 
-        <a href="#" onclick="event.preventDefault(); document.getElementById('like-post-form-{{ $post->id }}').submit();">
-         いいね
-        </a>
-        <form id="like-post-form-{{ $post->id }}" action="{{ route('post.like', ['post' => $post->id]) }}" method="POST" style="display: none;">
-        @csrf
-        </form>
+                <a href="#" onclick="event.preventDefault(); document.getElementById('like-post-form-{{ $post->id }}').submit();">
+    @if (auth()->user()->likedPosts()->where('post_id', $post->id)->exists())
+        <div style="cloor:red;">
+        いいね
+        </div>
+    @else
+        <h2>いいね</h2>
+    @endif
+</a>
+<form id="like-post-form-{{ $post->id }}" action="{{ route('post.like', ['post' => $post->id]) }}" method="POST" style="display: none;">
+    @csrf
+</form>
+                
+       
 
                 
                 
